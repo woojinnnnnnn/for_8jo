@@ -9,18 +9,18 @@ import { SignUpRequestDto } from '../dto/signup.request.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) private readonly userRepo: Repository<User>,
+    @InjectRepository(User) private readonly usersRepository: Repository<User>,
   ) {}
 
   // 회원 가입. ---------------------------------------------------------------
   async createUser(data: SignUpRequestDto) {
     const { email, nickname, password } = data;
-    const isExist = await this.userRepo.findOne({ where: { email } });
+    const isExist = await this.usersRepository.findOne({ where: { email } });
     if (isExist) {
       throw new UnauthorizedException('이미 존재하는 이메일.');
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await this.userRepo.save({
+    const newUser = await this.usersRepository.save({
       email,
       nickname,
       password: hashedPassword,
@@ -32,5 +32,23 @@ export class AuthService {
     //   nickname: user.nickname,
     // };
     // return Response;
+  }
+
+  // 로그인. ---------------------------------------------------------------
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.usersRepository.findOne({
+      where: { email },
+      select: ['id', 'email', 'nickname', 'password'],
+    });
+    if (!user) {
+      return null;
+    }
+    const result = await bcrypt.compare(password, user.password);
+    if (result) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userWithOutPassword } = user;
+      return userWithOutPassword;
+    }
+    return null;
   }
 }

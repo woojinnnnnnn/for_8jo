@@ -5,6 +5,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './common/exceptions/httpException.filter';
 import { ValidationPipe } from '@nestjs/common';
 import { SuccessInterceptor } from './common/interceptors/success.interceptor';
+import passport from 'passport';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -32,6 +35,20 @@ async function bootstrap() {
     origin: true, // 개발시 트루. 배포시에 localhost:3000 이런 느낌.
     credentials: true,
   });
+  // ------------------------------------------- Passport
+  app.use(cookieParser());
+  app.use(
+    session({
+      resave: false,
+      saveUninitialized: false,
+      secret: process.env.COOKIE_SECRET,
+      cookie: {
+        httpOnly: true,
+      },
+    }),
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   await app.listen(port);
   console.log(`---------- SERVER_START_ON_PORT ${port} ----------`);

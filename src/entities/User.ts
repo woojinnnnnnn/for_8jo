@@ -47,11 +47,11 @@ export class User {
 
   @ApiProperty({
     example: 'testPW@',
-    description: 'PASS_WORD',
+    description: 'PASSWORD',
   })
   @IsString()
   @IsNotEmpty()
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', select: false })
   password: string;
 
   @ApiProperty({

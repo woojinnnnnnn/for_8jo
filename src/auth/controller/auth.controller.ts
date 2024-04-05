@@ -10,6 +10,7 @@ import { SignUpRequestDto } from '../dto/signup.request.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/common/decorators/user.decorator';
 import { UndefinedToNullInterceptor } from 'src/common/interceptors/undefinedToNull.interceptor';
+import { LocalAutGuard } from '../local.auth.guard';
 
 @UseInterceptors(UndefinedToNullInterceptor)
 @ApiTags('AUTH')
@@ -28,7 +29,9 @@ export class AuthController {
   @ApiOperation({ summary: '로그인.' })
   @UseGuards(LocalAutGuard)
   @Post('sign-In')
-  logIn() {}
+  logIn(@User() user) {
+    return user;
+  }
 
   // 로그아웃. ---------------------------------------------------------------
   @ApiOperation({ summary: '로그아웃.' })
