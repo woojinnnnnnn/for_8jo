@@ -1,4 +1,10 @@
-import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { SignUpRequestDto } from '../dto/signup.request.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -20,6 +26,7 @@ export class AuthController {
 
   // 로그인. ---------------------------------------------------------------
   @ApiOperation({ summary: '로그인.' })
+  @UseGuards(LocalAutGuard)
   @Post('sign-In')
   logIn() {}
 
