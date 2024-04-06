@@ -6,11 +6,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
-import { SignUpRequestDto } from '../dto/signup.request.dto';
+import { SignUpRequestDto } from '../dto/signup.req.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/common/decorators/user.decorator';
 import { UndefinedToNullInterceptor } from 'src/common/interceptors/undefinedToNull.interceptor';
 import { LocalAutGuard } from '../local.auth.guard';
+import { LoginRequestDto } from '../dto/login.req.dto';
 
 @UseInterceptors(UndefinedToNullInterceptor)
 @ApiTags('AUTH')
@@ -29,8 +30,8 @@ export class AuthController {
   @ApiOperation({ summary: '로그인.' })
   @UseGuards(LocalAutGuard)
   @Post('sign-In')
-  logIn(@User() user) {
-    return user;
+  logIn(@Body() data: LoginRequestDto) {
+    return this.authService.login(data);
   }
 
   // 로그아웃. ---------------------------------------------------------------

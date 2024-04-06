@@ -11,7 +11,7 @@ import { Board } from './Board';
 import { Comment } from './Comment';
 import { Like } from './Like';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -32,6 +32,8 @@ export class User {
     description: 'NICK_NAME',
   })
   @IsString()
+  @MinLength(2)
+  @MaxLength(8)
   @IsNotEmpty()
   @Column({ type: 'varchar' })
   nickname: string;
@@ -41,6 +43,7 @@ export class User {
     description: 'EMAIL',
   })
   @IsEmail()
+  @MaxLength(60)
   @IsNotEmpty()
   @Column({ type: 'varchar' })
   email: string;

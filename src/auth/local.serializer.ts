@@ -20,7 +20,6 @@ export class LocalSerializer extends PassportSerializer {
       const user = await this.usersRepository.findOneOrFail({
         where: { id: +userId },
         select: ['id', 'email', 'nickname'],
-        //   relations: ['Workspaces'],
       });
       done(null, user); // 사용자 객체를 복원하여 req.user에 저장
     } catch (error) {
