@@ -11,7 +11,13 @@ import { Board } from './Board';
 import { Comment } from './Comment';
 import { Like } from './Like';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export enum UserRole {
   ADMIN = 'ADMIN',

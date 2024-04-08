@@ -3,23 +3,35 @@ import { AuthController } from './controller/auth.controller';
 import { AuthService } from './service/auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities/User';
-import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './local.strategy';
-import { LocalSerializer } from './local.serializer';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './jwt/auth.constants';
-import { JwtStrategy } from './jwt/jwt.strategy';
+import { PassportModule } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
+import { LocalServiceStrategy } from './strategy/local-service.strategy';
+import { JwtServiceStrategy } from './strategy/jwt-service.strategy';
+import { JwtServiceAuthGuard } from './guard/jwt-service.guard';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt', session: true }),
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '5h' },
-    }),
     TypeOrmModule.forFeature([User]),
+    PassportModule.register({ session: false }),
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => {
+        return {
+          // JWT Token Create.
+          secret: configService.get('SECRET_KEY'),
+          // JWT expires
+          signOptions: { expiresIn: '1y' },
+        };
+      },
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, LocalSerializer, JwtStrategy],
+  providers: [
+    AuthService,
+    LocalServiceStrategy,
+    JwtServiceStrategy,
+    JwtServiceAuthGuard,
+  ],
 })
 export class AuthModule {}
