@@ -65,7 +65,7 @@ export class User {
 
   @ApiProperty({
     example: UserRole,
-    description: '고유값',
+    description: '계정 권한.',
   })
   @Column({ type: 'varchar', default: UserRole.CLIENT })
   role: UserRole;

@@ -1,9 +1,10 @@
-import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from 'src/common/dtos/user.dto';
-import { User } from 'src/common/decorators/user.decorator';
 import { UndefinedToNullInterceptor } from 'src/common/interceptors/undefinedToNull.interceptor';
+import { JwtServiceAuthGuard } from 'src/auth/guard/jwt-service.guard';
+import { User } from 'src/common/decorators/user.decorator';
 
 @UseInterceptors(UndefinedToNullInterceptor)
 @ApiTags('USER')
@@ -13,6 +14,7 @@ export class UsersController {
 
   @ApiOperation({ summary: '내 정보.' })
   @ApiResponse({ status: 200, description: 'SUCCESS', type: UserDto })
+  @UseGuards(JwtServiceAuthGuard)
   @Get()
   getUsers(@User() user) {
     return user;

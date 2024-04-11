@@ -17,7 +17,7 @@ import { JwtServiceAuthGuard } from './guard/jwt-service.guard';
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {
         return {
-          // JWT Token Create.
+          // JWT Token 생성, 검증 시 사용하는 비밀키.
           secret: configService.get('SECRET_KEY'),
           // JWT expires
           signOptions: { expiresIn: '1y' },
