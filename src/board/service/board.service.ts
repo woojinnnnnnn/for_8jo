@@ -19,8 +19,6 @@ export class BoardService {
   // 게시글 작성 -------------------------------------------------
   async createBoard(data: CreateBoardDto, userId: number) {
     const { title, content, image } = data;
-
-    //     const user = await this.userRepository.findOne({ where: { id: userId } });
     const user = { id: userId };
 
     const createPost = this.boardRepository.save({
